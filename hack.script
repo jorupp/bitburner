@@ -1,0 +1,11 @@
+var minMoney = 0;
+if (args.length > 1) {
+	minMoney = parseInt(args[1]);
+}
+while (true) {
+	if (getServerMoneyAvailable(args[0]) >= minMoney) {
+		hack(args[0]);
+	} else {
+		delay(60000);
+	}
+}

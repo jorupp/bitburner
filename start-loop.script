@@ -1,0 +1,36 @@
+var host = args[0];
+var target = args[1];
+var script = 'loop.script';
+
+if (!hasRootAccess(target)) {
+	if (fileExists("BruteSSH.exe", "home")) {
+		brutessh(target);
+	}
+	nuke(target);
+}
+if (!hasRootAccess(host)) {
+	if (fileExists("BruteSSH.exe", "home")) {
+		brutessh(host);
+	}
+	nuke(host);
+}
+
+tprint('Host: ' + host + ', hasRoot: ' + hasRootAccess(host));
+tprint('Target: ' + target + ', hasRoot: ' + hasRootAccess(target));
+
+var maxRam = getServerMaxRam(host);
+var usedRam = getServerUsedRam(host);
+var freeRam = maxRam - usedRam;
+var scriptRam = getScriptRam(script, 'home');
+if (scriptRam == 0) {
+	throw new Error('Script ' + script + ' does not exist on home');
+}
+var numThreads = Math.floor(freeRam / scriptRam);
+
+if (scriptRam > 0 && numThreads > 0) {
+	tprint('Starting ' + numThreads + ' on ' + host + ' to target ' + target);
+	scp(script, 'home', host);
+	exec(script, host, numThreads, target);
+} else {
+	tprint('Cannot start ' + script + ' on host - no free memory - ' + scriptRam + ' needed, ' + freeRam + ' free');
+}
