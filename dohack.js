@@ -3,8 +3,8 @@ export async function main(ns) {
     let server = ns.args[0];
     let minSl = ns.getServerMinSecurityLevel(server);
     let maxMoney = ns.getServerMaxMoney(server);
-    let targetSl = minSl + 0.1;
-    let targetMoney = maxMoney * 0.6;
+    let targetSl = minSl * 1.1 + 0.1;
+    let targetMoney = maxMoney * 0.8;
       while(true) {
       let curSl = ns.getServerSecurityLevel(server);
       if (curSl > targetSl) {
